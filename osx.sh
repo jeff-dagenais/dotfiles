@@ -208,7 +208,7 @@ echo "Safari New Window Behavior"
 defaults write com.apple.Safari NewWindowBehavior -int 0
 
 echo "Safari New Tab Behavior"
-defaults write com.apple.Safari NewTabBehavior -int 0
+defaults write com.apple.Safari NewTabBehavior -int 2
 
 echo "SafariGeolocationPermissionPolicy"
 defaults write com.apple.Safari SafariGeolocationPermissionPolicy -int 1
