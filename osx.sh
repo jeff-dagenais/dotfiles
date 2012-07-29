@@ -2,23 +2,29 @@
 echo "Update Software"
 sudo softwareupdate --download --all --install
 
+echo "Set Computer Name, Local Host Name and Host Name"
+sudo scutil --set ComputertName riot
+sudo scutil --set LocalHostName riot
+sudo scutil --set HostName riot
+
+echo "Menu bar: hide the useless Time Machine and Volume icons"
+defaults write com.apple.systemuiserver menuExtras -array "/System/Library/CoreServices/Menu Extras/Bluetooth.menu" "/System/Library/CoreServices/Menu Extras/AirPort.menu" "/System/Library/CoreServices/Menu Extras/Battery.menu" "/System/Library/CoreServices/Menu Extras/Clock.menu"
+
 #
 # Terminal Shit
 # -----------------
 echo "Custom Terminal Prompt"
 export PS1="\u@\h:\W \\$ " 
 
+echo "Use the Pro theme by default in Terminal.app"
+defaults write com.apple.Terminal "Default Window Settings" -string "Pro"
+defaults write com.apple.Terminal "Startup Window Settings" -string "Pro"
+
 echo "Remove the `Last login` message from the Terminal"
 touch .hushlogin
 
-echo "Install Homebrew"
-/usr/bin/ruby -e "$(/usr/bin/curl -fsSL https://raw.github.com/mxcl/homebrew/master/Library/Contributions/install_homebrew.rb)"
-
-echo "Install Git through Homebrew"
-brew install git
-
 echo "General OS environment settings"
-export EDITOR="subl -w"
+export EDITOR="sublime -w"
 export GIT_EDITOR=EDITOR
 
 echo "Expand save and print panels by default"
@@ -57,6 +63,9 @@ defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 echo "Enable text selection in QuickLook"
 defaults write com.apple.finder QLEnableTextSelection -boolean true
+
+echo "Disable auto-correct"
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
 #
 # Screen
@@ -116,22 +125,18 @@ echo "Set New Window Path"
 /usr/libexec/PlistBuddy -c "Add :NewWindowTargetPath string $HOME" ~/Library/Preferences/com.apple.finder.plist
 
 echo "Show Hard Drives on Desktop. Hide Removable Media on Desktop."
-/usr/libexec/PlistBuddy -c "Delete :ShowHardDrivesOnDesktop" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Add :ShowHardDrivesOnDesktop bool true" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Delete :ShowRemovableMediaOnDesktop" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Add :ShowRemovableMediaOnDesktop bool false" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Delete :ShowRemovableMediaOnDesktop" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Add :ShowRemovableMediaOnDesktop bool false" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Delete :ShowExternalHardDrivesOnDesktop" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Add :ShowExternalHardDrivesOnDesktop bool true" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Delete :ShowExternalHardDrivesOnDesktop" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Add :ShowExternalHardDrivesOnDesktop bool true" ~/Library/Preferences/com.apple.finder.plist
+defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
 echo "Show Pathbar and Status Bar in Finder"
 /usr/libexec/PlistBuddy -c "Delete :ShowPathbar" ~/Library/Preferences/com.apple.finder.plist
 /usr/libexec/PlistBuddy -c "Add :ShowPathbar bool true" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Delete :ShowStatusBar" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Add :ShowStatusBar bool true" ~/Library/Preferences/com.apple.finder.plist
+defaults write com.apple.finder ShowStatusBar -bool true
+
+echo "Allow text selection in Quick Look"
+defaults write com.apple.finder QLEnableTextSelection -bool true
 
 echo "Disable the warning before emptying the Trash"
 defaults write com.apple.finder WarnOnEmptyTrash -bool false
@@ -222,6 +227,14 @@ defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2
 echo "Enable Safari’s debug menu"
 defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
 
+echo "Enable the Develop menu and the Web Inspector in Safari"
+defaults write com.apple.Safari IncludeDevelopMenu -bool true
+defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
+
+echo "Add a context menu item for showing the Web Inspector in web views"
+defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+
 echo "Remove useless icons from Safari’s bookmarks bar"
 defaults write com.apple.Safari ProxiesInBookmarksBar "()"
 
@@ -245,7 +258,7 @@ defaults write com.apple.iTunes disablePing -bool true
 echo "Make ⌘ + F focus the search input in iTunes"
 defaults write com.apple.iTunes NSUserKeyEquivalents -dict-add "Target Search Field" "@F"
 
-echo "Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app"
+echo "Copy email addresses as foo@example.com instead of Foo Bar <foo@example.com> in Mail.app"
 defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
 
 ###############################################################################
